@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课题培训文档</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #f0f4f8;
+    color: #2d3748;
+    line-height: 1.8;
+  }
+
+  /* ===== 顶部 Hero ===== */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    text-align: center;
+    padding: 60px 20px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(16,185,129,0.1) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(99,102,241,0.3);
+    border: 1px solid rgba(99,102,241,0.5);
+    color: #a5b4fc;
+    font-size: 13px;
+    padding: 4px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 4vw, 42px);
+    font-weight: 700;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ===== 导航 Tab ===== */
+  .tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 20px;
+    margin-top: -28px;
+    position: relative;
+    z-index: 10;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .tab-btn.active-1, .tab-btn:hover.tab-1 {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+  }
+  .tab-btn.active-2, .tab-btn:hover.tab-2 {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+  }
+  .tab-btn:not(.active-1):not(.active-2) {
+    background: white;
+    color: #64748b;
+  }
+
+  /* ===== 主体内容 ===== */
+  .container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 0 20px 60px;
+  }
+
+  .topic-section { display: none; }
+  .topic-section.active { display: block; }
+
+  /* ===== 大标题区 ===== */
+  .topic-header {
+    border-radius: 20px;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .topic-1-header { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+  .topic-2-header { background: linear-gradient(135deg, #059669, #0891b2); }
+  .topic-header::after {
+    content: attr(data-emoji);
+    position: absolute;
+    right: 40px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.25;
+  }
+  .topic-header .number {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .topic-header h2 {
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 700;
+    line-height: 1.4;
+    max-width: 80%;
+  }
+  .topic-header .tagline {
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  /* ===== 卡片 ===== */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .t1 .icon { background: rgba(99,102,241,0.12); }
+  .t2 .icon { background: rgba(16,185,129,0.12); }
+
+  /* ===== 问题-痛点列表 ===== */
+  .pain-list {
+    display: grid;
+    gap: 12px;
+  }
+  .pain-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .pain-emoji { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .pain-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .pain-desc { font-size: 13px; color: #64748b; }
+
+  /* ===== 概念卡片 ===== */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .concept-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 3px solid;
+  }
+  .t1 .concept-card { border-color: #6366f1; }
+  .t2 .concept-card { border-color: #10b981; }
+  .concept-name {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .concept-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+
+  /* ===== 流程图 ===== */
+  .flow-wrap {
+    overflow-x: auto;
+    padding: 8px 0;
+  }
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 600px;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+  .flow-step {
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+    max-width: 150px;
+  }
+  .flow-box {
+    border-radius: 12px;
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.4;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin: 0 2px;
+  }
+  .flow-box .fe { font-size: 18px; }
+  .flow-arrow {
+    font-size: 20px;
+    color: #cbd5e1;
+    flex-shrink: 0;
+    padding: 0 4px;
+  }
+  .flow-sub {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 6px;
+    line-height: 1.4;
+    padding: 0 4px;
+  }
+
+  /* ===== 技术选型表 ===== */
+  .tech-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .tech-table th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  .tech-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+  }
+  .tech-table tr:last-child td { border-bottom: none; }
+  .tech-label {
+    font-weight: 600;
+    color: #374151;
+    white-space: nowrap;
+  }
+  .badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 2px;
+  }
+  .badge-purple { background: rgba(99,102,241,0.1); color: #6366f1; }
+  .badge-green  { background: rgba(16,185,129,0.1); color: #059669; }
+
+  /* ===== 目标卡片 ===== */
+  .goal-list { display: grid; gap: 14px; }
+  .goal-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .goal-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+    color: white;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .t1 .goal-num { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .t2 .goal-num { background: linear-gradient(135deg, #10b981, #0891b2); }
+  .goal-body { flex: 1; }
+  .goal-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .goal-desc { font-size: 13px; color: #64748b; }
+
+  /* ===== 立项提纲 ===== */
+  .outline-section { margin-bottom: 22px; }
+  .outline-heading {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .t1 .outline-heading { background: rgba(99,102,241,0.1); color: #6366f1; }
+  .t2 .outline-heading { background: rgba(16,185,129,0.1); color: #059669; }
+  .outline-list {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+  .outline-list li {
+    font-size: 14px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .outline-list li::before {
+    content: '→';
+    color: #cbd5e1;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ===== 对比卡片 ===== */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+  .compare-card {
+    border-radius: 14px;
+    padding: 20px;
+    border: 2px solid;
+  }
+  .compare-card.c1 {
+    border-color: rgba(99,102,241,0.3);
+    background: rgba(99,102,241,0.03);
+  }
+  .compare-card.c2 {
+    border-color: rgba(16,185,129,0.3);
+    background: rgba(16,185,129,0.03);
+  }
+  .compare-head {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .compare-item {
+    font-size: 13px;
+    color: #475569;
+    padding: 4px 0;
+    border-bottom: 1px dashed #e2e8f0;
+    display: flex;
+    gap: 8px;
+  }
+  .compare-item:last-child { border-bottom: none; }
+  .compare-key { color: #94a3b8; width: 60px; flex-shrink: 0; font-size: 12px; }
+
+  /* ===== Tip 框 ===== */
+  .tip-box {
+    background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.05));
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .tip-box .tip-icon { font-size: 20px; flex-shrink: 0; }
+
+  /* ===== 页面底部 ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+    font-size: 13px;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 640px) {
+    .card { padding: 20px; }
+    .topic-header { padding: 24px; }
+    .topic-header h2 { max-width: 100%; }
+    .topic-header::after { display: none; }
+    .concept-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== 颜色辅助 ===== */
+  .c-purple { color: #6366f1; }
+  .c-green { color: #10b981; }
+  .bg-p1 { background: linear-gradient(135deg,#6366f1,#8b5cf6); }
+  .bg-p2 { background: linear-gradient(135deg,#10b981,#0891b2); }
+  .bg-p3 { background: linear-gradient(135deg,#f59e0b,#ef4444); }
+  .bg-p4 { background: linear-gradient(135deg,#06b6d4,#3b82f6); }
+  .bg-p5 { background: linear-gradient(135deg,#8b5cf6,#ec4899); }
+
+  /* ===== 全屏按钮 ===== */
+  .fs-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transition: all 0.25s;
+    z-index: 9999;
+  }
+  .fs-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+  }
+  /* 全屏时隐藏滚动条，让页面更干净 */
+  :fullscreen body, :-webkit-full-screen body {
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>两个研究课题介绍</h1>
+  <p>了解课题背景、研究目标和关键技术，为准备立项材料打好基础</p>
+</div>
+
+<!-- Tab 导航 -->
+<div class="tab-nav">
+  <button class="tab-btn tab-1 active-1" onclick="showTopic(1)">
+    🤖 课题一：AI 智能数据分类
+  </button>
+  <button class="tab-btn tab-2" onclick="showTopic(2)">
+    📊 课题二：数据可视化前端
+  </button>
+</div>
+
+<div class="container">
+
+  <!-- ===== 课题一 ===== -->
+  <div class="topic-section t1 active" id="topic-1">
+
+    <div class="topic-header topic-1-header" data-emoji="🤖">
+      <div class="number">课题一 · AI 方向</div>
+      <h2>基于 RAG 与 LLM 的企业数据智能分类分级方案</h2>
+      <div class="tagline">用 AI 帮企业自动识别哪些数据是"敏感的"</div>
+    </div>
+
+    <!-- 背景：先讲故事 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">🌍</div>
+        研究背景：为什么要做这个？
+      </div>
+      <p style="font-size:14px; color:#475569; margin-bottom:16px;">
+        想象一下，一家公司有几十万个数据表、几百万个字段——比如「手机号」「银行卡号」「员工工资」「产品价格」……国家要求企业必须知道自己有哪些敏感数据、每类数据要怎么保护。但靠人工一个个看，根本看不完！
+      </p>
+      <div class="pain-list">
+        <div class="pain-item">
+          <div class="pain-emoji">😩</div>
+          <div>
+            <div class="pain-title">数据量太大，人工看不完</div>
+            <div class="pain-desc">一个中型企业就有成千上万个数据字段，靠人工标注既慢又贵</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-emoji">📜</div>
+          <div>
+            <div class="pain-title">法规太复杂，记不住</div>
+            <div class="pain-desc">《个人信息保护法》《数据安全法》条款繁多，不同数据有不同要求，普通员工很难精准判断</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-emoji">🔄</div>
+          <div>
+            <div class="pain-title">规则一直在变，维护成本高</div>
+            <div class="pain-desc">法律法规不断更新，手动维护规则库非常繁琐，容易漏掉更新</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:14px 16px; background:#f0fdf4; border-radius:10px; font-size:14px; color:#166534;">
+        💡 <strong>解决思路</strong>：让 AI 来读法规、学规则、自动判断——这就是这个课题要研究的！
+      </div>
+    </div>
+
+    <!-- 两个核心概念 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">🧩</div>
+        核心概念：先搞懂这两个词
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.05)); border-radius:14px; padding:20px; border:1px solid rgba(99,102,241,0.15);">
+          <div style="font-size:28px; margin-bottom:8px;">🧠</div>
+          <div style="font-weight:700; font-size:16px; color:#4f46e5; margin-bottom:8px;">LLM（大语言模型）</div>
+          <div style="font-size:13px; color:#475569; line-height:1.7;">
+            就是 ChatGPT、文心一言、DeepSeek 这类 AI。<br>
+            能理解人类语言，会"读文章"、"写答案"。<br><br>
+            <strong>但有个问题</strong>：它不了解你们公司的内部规定，也可能"一本正经地胡说"（幻觉问题）。
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(8,145,178,0.05)); border-radius:14px; padding:20px; border:1px solid rgba(16,185,129,0.15);">
+          <div style="font-size:28px; margin-bottom:8px;">🔍</div>
+          <div style="font-weight:700; font-size:16px; color:#059669; margin-bottom:8px;">RAG（检索增强生成）</div>
+          <div style="font-size:13px; color:#475569; line-height:1.7;">
+            先去"查资料"，再回答问题。<br>
+            把相关的法规条文先找出来，塞给 AI 看，AI 再基于这些资料作判断。<br><br>
+            <strong>效果</strong>：AI 有了"参考书"，回答更准确、有据可查。
+          </div>
+        </div>
+      </div>
+      <div style="background:#fafafa; border-radius:10px; padding:14px 16px; font-size:14px; text-align:center; color:#64748b;">
+        🎯 <strong>类比理解</strong>：LLM 就像一个聪明但粗心的学生，RAG 就是考试前给他一份开卷资料——有了资料，答题更准！
+      </div>
+    </div>
+
+    <!-- 更多概念解释 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">📖</div>
+        其他关键词速查
+      </div>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <div class="concept-name">📊 数据分类</div>
+          <div class="concept-desc">判断这条数据属于哪类，比如「手机号」→ 个人信息，「季度利润」→ 财务数据</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🔐 数据分级</div>
+          <div class="concept-desc">判断这条数据有多敏感，比如「公开 / 内部 / 敏感 / 核心」四个等级</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🗄️ 向量数据库</div>
+          <div class="concept-desc">一种特殊数据库，能根据"意思相近"来搜索，而不是靠关键词匹配。是 RAG 的核心工具</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🔢 Embedding（向量化）</div>
+          <div class="concept-desc">把文字转成一串数字（向量），让计算机能理解文字之间的"意思距离"</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">💬 Prompt 工程</div>
+          <div class="concept-desc">设计"怎么问 AI"的艺术。同样的问题，不同问法效果差很多</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">✅ 测试集评估</div>
+          <div class="concept-desc">准备一批已知答案的数据，测试 AI 判断对了几个，算出准确率</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 研究目标 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">🎯</div>
+        研究目标：要验证什么？
+      </div>
+      <div style="background: linear-gradient(135deg,#4f46e5,#7c3aed); border-radius:12px; padding:16px 20px; margin-bottom:20px; color:white; font-size:14px; line-height:1.7;">
+        <strong>核心问题</strong>：RAG + LLM 这个组合，能不能帮企业自动判断数据的类别和敏感等级？和直接用 LLM 相比，准确率能提升多少？
+      </div>
+      <div class="goal-list">
+        <div class="goal-item">
+          <div class="goal-num t1">1</div>
+          <div class="goal-body">
+            <div class="goal-title">建一个"法规知识库"</div>
+            <div class="goal-desc">把《个人信息保护法》等法规内容整理好，存入向量数据库，让系统能快速检索相关条文</div>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num t1">2</div>
+          <div class="goal-body">
+            <div class="goal-title">跑通核心流程</div>
+            <div class="goal-desc">从"输入字段描述" → "检索相关规则" → "AI 给出判断+依据"，整个流程跑通</div>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num t1">3</div>
+          <div class="goal-body">
+            <div class="goal-title">做实验、比效果</div>
+            <div class="goal-desc">构建测试集，对比"有 RAG"和"没有 RAG"两种方案的准确率，用数据说话</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 技术流程 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">⚙️</div>
+        技术流程：系统怎么工作的？
+      </div>
+      <div class="flow-wrap">
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-box bg-p1">
+              <span class="fe">📝</span>输入
+            </div>
+            <div class="flow-sub">字段名称<br>+字段描述</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-box bg-p4">
+              <span class="fe">🔍</span>语义检索
+            </div>
+            <div class="flow-sub">在知识库里<br>找相关法规</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-box bg-p5">
+              <span class="fe">🧠</span>AI 判断
+            </div>
+            <div class="flow-sub">基于检索到的<br>规则给出答案</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-box bg-p2">
+              <span class="fe">✅</span>输出结果
+            </div>
+            <div class="flow-sub">类别+等级<br>+引用依据</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:20px; background:#f8fafc; border-radius:10px; padding:16px; font-size:13px; color:#475569; line-height:1.8;">
+        <strong>举个例子 🌰</strong><br>
+        输入：字段名"id_card_no"，描述"用户身份证号"<br>
+        ↓ 系统检索到《个人信息保护法》第28条：「身份证号属于敏感个人信息」<br>
+        ↓ AI 基于该条文判断：分类=个人敏感信息，等级=核心级<br>
+        ↓ 输出结果附带规则引用，有据可查 ✔
+      </div>
+    </div>
+
+    <!-- 技术选型 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">🛠️</div>
+        技术选型参考（用什么工具做？）
+      </div>
+      <table class="tech-table">
+        <thead>
+          <tr>
+            <th>负责哪块</th>
+            <th>可以用的工具</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tech-label">大语言模型</td>
+            <td>
+              <span class="badge badge-purple">DeepSeek</span>
+              <span class="badge badge-purple">Qwen（通义）</span>
+              <span class="badge badge-purple">GPT-4 API</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">国产模型更便宜，推荐 DeepSeek</td>
+          </tr>
+          <tr>
+            <td class="tech-label">向量数据库</td>
+            <td>
+              <span class="badge badge-green">Chroma（开源）</span>
+              <span class="badge badge-purple">腾讯云向量数据库（闭源）</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">Chroma 本地可跑，免费；腾讯云提供托管服务，开箱即用</td>
+          </tr>
+          <tr>
+            <td class="tech-label">RAG 框架</td>
+            <td>
+              <span class="badge badge-green">LangChain（开源）</span>
+              <span class="badge badge-purple">Dify（闭源/托管）</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">LangChain 灵活可控；Dify 有可视化界面，搭流程更直观</td>
+          </tr>
+          <tr>
+            <td class="tech-label">后端语言</td>
+            <td>
+              <span class="badge">Python</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">Python 生态最丰富，AI 项目首选</td>
+          </tr>
+          <tr>
+            <td class="tech-label">快速搭 Demo</td>
+            <td>
+              <span class="badge">Gradio</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">几十行代码就能做出带输入框和结果展示的可视化界面</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 预期产出 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">🏆</div>
+        最终要交什么？
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:#f8fafc; border-radius:12px; padding:18px; border:2px solid rgba(99,102,241,0.2);">
+          <div style="font-size:22px; margin-bottom:8px;">📄</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">可行性验证报告</div>
+          <div style="font-size:13px; color:#64748b;">方案设计 + 实验过程 + 准确率对比数据 + 结论，这是必须完成的</div>
+        </div>
+        <div style="background:#f8fafc; border-radius:12px; padding:18px; border:2px solid rgba(16,185,129,0.2);">
+          <div style="font-size:22px; margin-bottom:8px;">💻</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">可运行 Demo（加分）</div>
+          <div style="font-size:13px; color:#64748b;">能在浏览器里输入字段信息，点击按钮就能看到 AI 给出分类分级结果</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 立项提纲 -->
+    <div class="card">
+      <div class="card-title t1">
+        <div class="icon">📋</div>
+        立项材料参考提纲
+      </div>
+      <div class="outline-section">
+        <div class="outline-heading">研究目标</div>
+        <ul class="outline-list">
+          <li>验证 RAG+LLM 技术组合在企业数据分类分级场景中的技术可行性</li>
+          <li>量化评估：与纯 LLM 方案相比，准确率能提升多少？</li>
+        </ul>
+      </div>
+      <div class="outline-section">
+        <div class="outline-heading">研究内容</div>
+        <ul class="outline-list">
+          <li>研究如何将法规文档处理成可检索的知识库（分块、向量化）</li>
+          <li>设计 RAG 检索流程：怎么让检索结果更准确</li>
+          <li>Prompt 设计：怎样引导 AI 按格式输出结构化结果</li>
+          <li>构建测试集，设计准确率等评估指标，做对比实验</li>
+        </ul>
+      </div>
+      <div class="outline-section">
+        <div class="outline-heading">技术路线</div>
+        <ul class="outline-list">
+          <li>数据准备：收集整理法规文档 → 文本分块 → Embedding 入库</li>
+          <li>系统搭建：LangChain 搭建 RAG 流程 → 接入 LLM API</li>
+          <li>实验评估：构建 50~100 条测试集 → 跑实验 → 统计准确率</li>
+          <li>报告撰写：方案描述 + 实验结果 + 结论与不足</li>
+        </ul>
+      </div>
+      <div class="tip-box">
+        <div class="tip-icon">💡</div>
+        <div style="font-size:13px;">
+          <strong>评审老师最看重什么？</strong><br>
+          你们能不能清楚说出：这个方案的核心挑战在哪、怎么验证成功与否、用什么指标衡量。不需要全都做完，重要的是思路清晰。
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topic-1 -->
+
+
+  <!-- ===== 课题二 ===== -->
+  <div class="topic-section t2" id="topic-2">
+
+    <div class="topic-header topic-2-header" data-emoji="📊">
+      <div class="number">课题二 · 前端方向</div>
+      <h2>轻量级数据资产可视化与合规性评估前端方案</h2>
+      <div class="tagline">用漂亮的图表，让人一眼看懂数据的分布和风险</div>
+    </div>
+
+    <!-- 背景 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">🌍</div>
+        研究背景：为什么要做可视化？
+      </div>
+      <p style="font-size:14px; color:#475569; margin-bottom:16px;">
+        假设课题一帮企业把数据都分类分级好了——但结果是一堆数字和表格，管理层根本看不进去。他们需要的是：打开一个页面，直接看到"公司有哪些敏感数据、分布在哪、哪块风险最高"。
+      </p>
+      <div class="pain-list">
+        <div class="pain-item">
+          <div class="pain-emoji">😵</div>
+          <div>
+            <div class="pain-title">数据表格太枯燥，决策层看不懂</div>
+            <div class="pain-desc">一张张数据表没有直观感，不如一张图来得清晰</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-emoji">🐢</div>
+          <div>
+            <div class="pain-title">传统系统开发太慢</div>
+            <div class="pain-desc">建完整的后端+数据库+前端，没几个月根本搞不定，但很多场景只需要一个演示原型</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-emoji">🤔</div>
+          <div>
+            <div class="pain-title">没有真实数据，没法做原型</div>
+            <div class="pain-desc">项目初期拿不到真实数据，但还是需要一个可演示的效果来和客户/老板对需求</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:14px 16px; background:#f0fdf4; border-radius:10px; font-size:14px; color:#166534;">
+        💡 <strong>解决思路</strong>：用 Mock 数据 + 现代前端框架，不依赖后端，快速做出高颜值、可交互的数据大屏原型！
+      </div>
+    </div>
+
+    <!-- 核心概念 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">🧩</div>
+        核心概念速查
+      </div>
+      <div class="concept-grid">
+        <div class="concept-card">
+          <div class="concept-name">📦 数据资产</div>
+          <div class="concept-desc">企业拥有的所有有价值的数据，比如用户数据、订单数据、财务数据等</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🕸️ 数据血缘</div>
+          <div class="concept-desc">数据从哪里来、经过哪些处理、流向哪里去，用有向图（箭头图）表示</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🎭 Mock 数据</div>
+          <div class="concept-desc">自己写的假数据，模拟真实情况，让前端页面有内容可以展示，不需要真实后端</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🎨 高保真原型</div>
+          <div class="concept-desc">长得和真实产品一模一样、可以点击交互的原型，而不是只有线框的草图</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">🔥 风险热力图</div>
+          <div class="concept-desc">用颜色深浅表示风险高低，颜色越深风险越高，一眼就能找到问题所在</div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-name">⚡ 前端框架</div>
+          <div class="concept-desc">React 或 Vue，帮助你组织代码、构建交互界面，不用从零写 HTML/JS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 研究目标 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">🎯</div>
+        研究目标：要探索什么？
+      </div>
+      <div style="background: linear-gradient(135deg,#059669,#0891b2); border-radius:12px; padding:16px 20px; margin-bottom:20px; color:white; font-size:14px; line-height:1.7;">
+        <strong>核心问题</strong>：不搭后端、不连数据库，只用前端技术，能做出多好看、多好用的数据资产可视化系统？
+      </div>
+      <div class="goal-list">
+        <div class="goal-item">
+          <div class="goal-num t2">1</div>
+          <div class="goal-body">
+            <div class="goal-title">选对可视化工具</div>
+            <div class="goal-desc">对比 ECharts、D3.js、AntV G6 等图表库，找出适合数据资产场景的最优选择</div>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num t2">2</div>
+          <div class="goal-body">
+            <div class="goal-title">做出核心图表</div>
+            <div class="goal-desc">数据分级分布饼图、数据血缘关系图、风险热力图等，这些是数据资产平台的标配</div>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num t2">3</div>
+          <div class="goal-body">
+            <div class="goal-title">探索无后端架构</div>
+            <div class="goal-desc">用 Mock 数据模拟真实场景，打包后直接用浏览器打开就能跑，部署零成本</div>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num t2">4</div>
+          <div class="goal-body">
+            <div class="goal-title">做好交互体验</div>
+            <div class="goal-desc">点击图表可以下钻查看详情、筛选不同数据、图表之间联动响应</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 页面规划 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">🖥️</div>
+        系统有哪些页面？
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px;">
+        <div style="background:#f0fdf4; border-radius:12px; padding:16px; border:1px solid rgba(16,185,129,0.2);">
+          <div style="font-size:24px; margin-bottom:8px;">🏠</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px; color:#059669;">数据资产总览</div>
+          <div style="font-size:12px; color:#64748b;">数据总量统计、各类数据占比饼图、敏感等级分布柱状图</div>
+        </div>
+        <div style="background:#f0f9ff; border-radius:12px; padding:16px; border:1px solid rgba(8,145,178,0.2);">
+          <div style="font-size:24px; margin-bottom:8px;">🕸️</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px; color:#0891b2;">数据血缘关系图</div>
+          <div style="font-size:12px; color:#64748b;">用箭头连线展示数据表之间的依赖关系，可拖拽交互</div>
+        </div>
+        <div style="background:#fff7ed; border-radius:12px; padding:16px; border:1px solid rgba(245,158,11,0.2);">
+          <div style="font-size:24px; margin-bottom:8px;">⚠️</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px; color:#d97706;">合规风险看板</div>
+          <div style="font-size:12px; color:#64748b;">风险热力图、高风险数据列表、合规评分雷达图</div>
+        </div>
+        <div style="background:#fdf4ff; border-radius:12px; padding:16px; border:1px solid rgba(168,85,247,0.2);">
+          <div style="font-size:24px; margin-bottom:8px;">🔍</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px; color:#9333ea;">字段详情页</div>
+          <div style="font-size:12px; color:#64748b;">点进具体数据表，查看每个字段的分类分级标注和规则依据</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 技术选型 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">🛠️</div>
+        技术选型参考（用什么工具做？）
+      </div>
+      <table class="tech-table">
+        <thead>
+          <tr><th>负责哪块</th><th>可以用的工具</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tech-label">前端技术</td>
+            <td>
+              <span class="badge badge-green">原生 HTML</span>
+              <span class="badge badge-green">JavaScript</span>
+              <span class="badge badge-green">CSS</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">不需要框架，直接写网页，配合 ECharts CDN 引入即可运行</td>
+          </tr>
+          <tr>
+            <td class="tech-label">统计图表</td>
+            <td>
+              <span class="badge badge-purple">ECharts</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">百度出品，文档中文，饼图柱图热力图全都有</td>
+          </tr>
+          <tr>
+            <td class="tech-label">UI 组件库</td>
+            <td>
+              <span class="badge">Ant Design</span>
+              <span class="badge">Element Plus</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">提供现成的按钮、表格、弹窗等组件</td>
+          </tr>
+          <tr>
+            <td class="tech-label">开发工具</td>
+            <td>
+              <span class="badge badge-green">HBuilder X</span>
+              <span class="badge">浏览器</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">HBuilder 内置前端支持，写完直接在浏览器预览，零配置上手</td>
+          </tr>
+          <tr>
+            <td class="tech-label">Mock 数据</td>
+            <td>
+              <span class="badge">本地 JSON 文件</span>
+              <span class="badge">Mock.js</span>
+            </td>
+            <td style="font-size:13px; color:#64748b;">写假数据模拟后端，不需要真实 API</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 技术架构流程 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">⚙️</div>
+        技术架构简图
+      </div>
+      <div class="flow-wrap">
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-box bg-p3">
+              <span class="fe">📂</span>Mock 数据
+            </div>
+            <div class="flow-sub">本地 JSON 文件<br>模拟真实数据</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-box bg-p2">
+              <span class="fe">⚛️</span>前端框架
+            </div>
+            <div class="flow-sub">React / Vue<br>管理状态和路由</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-box bg-p4">
+              <span class="fe">📊</span>图表渲染
+            </div>
+            <div class="flow-sub">ECharts + G6<br>绘制各类图表</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="flow-box bg-p1">
+              <span class="fe">🖥️</span>用户界面
+            </div>
+            <div class="flow-sub">可交互的数据<br>资产大屏</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px; background:#f8fafc; border-radius:10px; padding:14px 16px; font-size:13px; color:#64748b; line-height:1.8;">
+        <strong>最大亮点</strong>：整个系统打包后是一堆静态文件，直接拖进浏览器就能运行，不需要服务器，不需要数据库，部署零成本。
+      </div>
+    </div>
+
+    <!-- 预期产出 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">🏆</div>
+        最终要交什么？
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:#f8fafc; border-radius:12px; padding:18px; border:2px solid rgba(16,185,129,0.2);">
+          <div style="font-size:22px; margin-bottom:8px;">💻</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">高保真前端 Demo</div>
+          <div style="font-size:13px; color:#64748b;">可以在浏览器里运行、点击的完整原型，有真实图表和交互效果</div>
+        </div>
+        <div style="background:#f8fafc; border-radius:12px; padding:18px; border:2px solid rgba(8,145,178,0.2);">
+          <div style="font-size:22px; margin-bottom:8px;">📄</div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">技术方案报告</div>
+          <div style="font-size:13px; color:#64748b;">技术选型理由 + 架构设计 + 关键实现说明 + 踩坑经验 + 局限性分析</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 立项提纲 -->
+    <div class="card">
+      <div class="card-title t2">
+        <div class="icon">📋</div>
+        立项材料参考提纲
+      </div>
+      <div class="outline-section">
+        <div class="outline-heading">研究目标</div>
+        <ul class="outline-list">
+          <li>探索现代前端技术在企业数据资产可视化场景中的可行性与最佳实践</li>
+          <li>构建不依赖后端的、可快速复用的数据资产可视化前端原型框架</li>
+        </ul>
+      </div>
+      <div class="outline-section">
+        <div class="outline-heading">研究内容</div>
+        <ul class="outline-list">
+          <li>数据资产可视化需求分析：哪些信息最关键、用什么图表最合适</li>
+          <li>可视化库对比：ECharts / D3.js / AntV G6 各自的优缺点和适用场景</li>
+          <li>无后端 Mock 数据方案设计：如何模拟真实的企业数据结构</li>
+          <li>核心图表实现：分布图、血缘图、热力图的具体开发</li>
+          <li>交互设计：下钻、筛选、多图表联动等体验优化</li>
+        </ul>
+      </div>
+      <div class="outline-section">
+        <div class="outline-heading">技术路线</div>
+        <ul class="outline-list">
+          <li>第一步：需求分析 → 画出页面结构草图</li>
+          <li>第二步：Mock 数据建模 → 设计符合真实场景的 JSON 数据结构</li>
+          <li>第三步：组件开发 → 先做单个图表，再拼成完整页面</li>
+          <li>第四步：集成联调 → 确保图表联动、路由跳转正常</li>
+          <li>第五步：效果演示 + 报告撰写</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div><!-- /topic-2 -->
+
+
+  <!-- 两课题对比（始终显示） -->
+  <div class="card" id="compare-card">
+    <div class="card-title">
+      <div class="icon" style="background:#f1f5f9;">🔄</div>
+      两个课题对比：哪个更适合你？
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card c1">
+        <div class="compare-head">
+          <span style="font-size:20px;">🤖</span>
+          <span class="c-purple">课题一 · AI 分类</span>
+        </div>
+        <div class="compare-item"><span class="compare-key">技术方向</span><span>Python · AI · 后端</span></div>
+        <div class="compare-item"><span class="compare-key">核心挑战</span><span>准确率 · Prompt 设计 · 知识库质量</span></div>
+        <div class="compare-item"><span class="compare-key">主要产出</span><span>实验报告 + 可选 Demo</span></div>
+        <div class="compare-item"><span class="compare-key">适合同学</span><span>喜欢 AI、Python、做实验</span></div>
+        <div class="compare-item"><span class="compare-key">难点</span><span>需要理解 RAG 原理，会写实验对比</span></div>
+      </div>
+      <div class="compare-card c2">
+        <div class="compare-head">
+          <span style="font-size:20px;">📊</span>
+          <span class="c-green">课题二 · 可视化</span>
+        </div>
+        <div class="compare-item"><span class="compare-key">技术方向</span><span>前端 · 可视化 · 交互设计</span></div>
+        <div class="compare-item"><span class="compare-key">核心挑战</span><span>图表选型 · 交互体验 · 视觉效果</span></div>
+        <div class="compare-item"><span class="compare-key">主要产出</span><span>可运行前端系统 + 报告</span></div>
+        <div class="compare-item"><span class="compare-key">适合同学</span><span>喜欢前端、设计、可视化</span></div>
+        <div class="compare-item"><span class="compare-key">难点</span><span>需要工程能力，要做出好看的效果</span></div>
+      </div>
+    </div>
+    <div style="margin-top:16px; background:linear-gradient(135deg,rgba(99,102,241,0.05),rgba(16,185,129,0.05)); border-radius:12px; padding:16px; border:1px solid rgba(99,102,241,0.15); font-size:14px; color:#475569;">
+      🤝 <strong>两个课题天然互补</strong>：课题一负责"让 AI 判断哪些数据是敏感的"，课题二负责"把这些判断结果用图表展示出来"。如果两组同学能合作，可以打通成一个完整的数据资产管理系统！
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  课题培训材料 · 祝同学们研究顺利 🎓
+</div>
+
+<script>
+  function showTopic(n) {
+    document.querySelectorAll('.topic-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('topic-' + n).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('active-1', 'active-2');
+    });
+    const btns = document.querySelectorAll('.tab-btn');
+    btns[n-1].classList.add('active-' + n);
+  }
+</script>
+
+<!-- 全屏按钮 -->
+<button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()" title="全屏展示">⛶</button>
+
+<script>
+  function toggleFullscreen() {
+    const btn = document.getElementById('fsBtn');
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      btn.textContent = '✕';
+      btn.title = '退出全屏';
+    } else {
+      document.exitFullscreen();
+      btn.textContent = '⛶';
+      btn.title = '全屏展示';
+    }
+  }
+  document.addEventListener('fullscreenchange', () => {
+    const btn = document.getElementById('fsBtn');
+    if (!document.fullscreenElement) {
+      btn.textContent = '⛶';
+      btn.title = '全屏展示';
+    }
+  });
+  // 按 ESC 退出时同步按钮状态（浏览器已原生处理，这里做兜底）
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !document.fullscreenElement) {
+      document.getElementById('fsBtn').textContent = '⛶';
+    }
+  });
+</script>
+</body>
+</html>

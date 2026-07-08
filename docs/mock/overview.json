@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "description": "数据资产总览页 Mock 数据",
+    "generatedAt": "2026-05-12"
+  },
+  "stats": {
+    "totalTables": 328,
+    "totalFields": 4521,
+    "sensitivePct": 23.6,
+    "newThisMonth": 47
+  },
+  "categoryDistribution": [
+    { "name": "个人信息", "value": 89, "color": "#5470C6" },
+    { "name": "财务数据", "value": 64, "color": "#EE6666" },
+    { "name": "业务数据", "value": 112, "color": "#91CC75" },
+    { "name": "系统数据", "value": 43, "color": "#FAC858" },
+    { "name": "公开数据", "value": 20, "color": "#73C0DE" }
+  ],
+  "levelByDomain": {
+    "domains": ["用户中心", "交易系统", "财务中心", "营销系统", "IT运维"],
+    "levels": {
+      "core": [12, 8, 15, 3, 2],
+      "sensitive": [24, 18, 22, 11, 5],
+      "internal": [30, 35, 18, 28, 20],
+      "public": [8, 5, 4, 12, 6]
+    }
+  },
+  "trend": {
+    "months": ["2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11",
+               "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"],
+    "added": [18, 22, 15, 31, 24, 19, 12, 28, 33, 25, 42, 47],
+    "modified": [8, 11, 6, 14, 9, 12, 5, 18, 21, 15, 30, 22]
+  }
+}

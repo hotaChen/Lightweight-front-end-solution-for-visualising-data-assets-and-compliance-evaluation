@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "description": "数据血缘关系图 Mock 数据",
+    "generatedAt": "2026-05-12"
+  },
+  "nodes": [
+    { "id": "ods_user_raw",       "label": "ods_user_raw",       "domain": "用户中心", "level": "core",      "tableId": "t001" },
+    { "id": "ods_order_raw",      "label": "ods_order_raw",      "domain": "交易系统", "level": "sensitive", "tableId": "t002" },
+    { "id": "ods_pay_raw",        "label": "ods_pay_raw",        "domain": "财务中心", "level": "core",      "tableId": "t003" },
+    { "id": "dwd_user_info",      "label": "dwd_user_info",      "domain": "用户中心", "level": "core",      "tableId": "t004" },
+    { "id": "dwd_order_detail",   "label": "dwd_order_detail",   "domain": "交易系统", "level": "sensitive", "tableId": "t005" },
+    { "id": "dwd_pay_detail",     "label": "dwd_pay_detail",     "domain": "财务中心", "level": "core",      "tableId": "t006" },
+    { "id": "dws_user_behavior",  "label": "dws_user_behavior",  "domain": "营销系统", "level": "internal",  "tableId": "t007" },
+    { "id": "dws_order_summary",  "label": "dws_order_summary",  "domain": "交易系统", "level": "internal",  "tableId": "t008" },
+    { "id": "ads_risk_label",     "label": "ads_risk_label",     "domain": "风控系统", "level": "sensitive", "tableId": "t009" },
+    { "id": "ads_user_portrait",  "label": "ads_user_portrait",  "domain": "营销系统", "level": "sensitive", "tableId": "t010" },
+    { "id": "ads_finance_report", "label": "ads_finance_report", "domain": "财务中心", "level": "core",      "tableId": "t011" },
+    { "id": "rpt_dashboard",      "label": "rpt_dashboard",      "domain": "管理报表", "level": "internal",  "tableId": "t012" }
+  ],
+  "edges": [
+    { "source": "ods_user_raw",      "target": "dwd_user_info",      "label": "清洗转换" },
+    { "source": "ods_order_raw",     "target": "dwd_order_detail",   "label": "清洗转换" },
+    { "source": "ods_pay_raw",       "target": "dwd_pay_detail",     "label": "清洗转换" },
+    { "source": "dwd_user_info",     "target": "dws_user_behavior",  "label": "聚合分析" },
+    { "source": "dwd_user_info",     "target": "ads_risk_label",     "label": "特征提取" },
+    { "source": "dwd_order_detail",  "target": "dws_order_summary",  "label": "聚合统计" },
+    { "source": "dwd_order_detail",  "target": "ads_risk_label",     "label": "特征提取" },
+    { "source": "dwd_pay_detail",    "target": "ads_finance_report", "label": "财务汇总" },
+    { "source": "dws_user_behavior", "target": "ads_user_portrait",  "label": "标签融合" },
+    { "source": "dws_order_summary", "target": "ads_user_portrait",  "label": "标签融合" },
+    { "source": "ads_user_portrait", "target": "rpt_dashboard",      "label": "报表输出" },
+    { "source": "ads_finance_report","target": "rpt_dashboard",      "label": "报表输出" },
+    { "source": "ads_risk_label",    "target": "rpt_dashboard",      "label": "风险汇总" }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "description": "合规风险看板 Mock 数据",
+    "generatedAt": "2026-05-12"
+  },
+  "complianceStatus": {
+    "compliant": 156,
+    "pendingFix": 43,
+    "overdue": 12
+  },
+  "heatmap": {
+    "domains": ["用户中心", "交易系统", "财务中心", "营销系统", "IT运维"],
+    "levels":  ["core", "sensitive", "internal", "public"],
+    "levelLabels": ["核心级", "敏感级", "内部级", "公开级"],
+    "data": [
+      [12, 24, 30,  8],
+      [ 8, 18, 35,  5],
+      [15, 22, 18,  4],
+      [ 3, 11, 28, 12],
+      [ 2,  5, 20,  6]
+    ]
+  },
+  "radarScore": {
+    "indicators": [
+      { "name": "个人信息保护", "max": 100 },
+      { "name": "财务数据合规", "max": 100 },
+      { "name": "内部数据安全", "max": 100 },
+      { "name": "数据访问控制", "max": 100 },
+      { "name": "数据留存合规", "max": 100 },
+      { "name": "跨境传输合规", "max": 100 }
+    ],
+    "scores": [72, 85, 68, 79, 91, 55]
+  },
+  "highRiskTables": [
+    {
+      "tableId": "t003", "tableName": "ods_pay_raw",      "domain": "财务中心",
+      "level": "core",      "riskScore": 94, "issue": "包含银行卡号等核心敏感字段，缺少字段级加密",
+      "status": "overdue"
+    },
+    {
+      "tableId": "t001", "tableName": "ods_user_raw",     "domain": "用户中心",
+      "level": "core",      "riskScore": 91, "issue": "身份证号、手机号未脱敏，访问日志不完整",
+      "status": "overdue"
+    },
+    {
+      "tableId": "t006", "tableName": "dwd_pay_detail",   "domain": "财务中心",
+      "level": "core",      "riskScore": 88, "issue": "财务明细数据存在未授权查询风险",
+      "status": "pendingFix"
+    },
+    {
+      "tableId": "t004", "tableName": "dwd_user_info",    "domain": "用户中心",
+      "level": "core",      "riskScore": 85, "issue": "个人敏感信息跨系统传输缺少审批记录",
+      "status": "pendingFix"
+    },
+    {
+      "tableId": "t011", "tableName": "ads_finance_report","domain": "财务中心",
+      "level": "core",      "riskScore": 82, "issue": "对外报表包含内部财务敏感指标",
+      "status": "pendingFix"
+    },
+    {
+      "tableId": "t009", "tableName": "ads_risk_label",   "domain": "风控系统",
+      "level": "sensitive", "riskScore": 76, "issue": "风控标签涉及用户画像，未完成个保合规评估",
+      "status": "pendingFix"
+    },
+    {
+      "tableId": "t010", "tableName": "ads_user_portrait","domain": "营销系统",
+      "level": "sensitive", "riskScore": 71, "issue": "用户画像数据用于第三方投放，缺少授权协议",
+      "status": "pendingFix"
+    },
+    {
+      "tableId": "t005", "tableName": "dwd_order_detail", "domain": "交易系统",
+      "level": "sensitive", "riskScore": 65, "issue": "订单详情含用户地址信息，权限粒度过粗",
+      "status": "pendingFix"
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "description": "数据表及字段详情 Mock 数据",
+    "generatedAt": "2026-05-12"
+  },
+  "tables": [
+    {
+      "id": "t001",
+      "name": "ods_user_raw",
+      "description": "用户基础信息原始层，来自业务系统实时同步",
+      "domain": "用户中心",
+      "level": "core",
+      "riskScore": 91,
+      "owner": "张磊",
+      "fieldCount": 18,
+      "updatedAt": "2026-05-10",
+      "fields": [
+        {
+          "id": "f001", "name": "user_id",     "description": "用户唯一标识",
+          "dataType": "VARCHAR(64)", "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 10
+        },
+        {
+          "id": "f002", "name": "real_name",   "description": "用户真实姓名",
+          "dataType": "VARCHAR(50)",  "category": "个人信息",   "level": "sensitive",
+          "regulation": "个人信息保护法 第28条", "riskScore": 72
+        },
+        {
+          "id": "f003", "name": "id_card_no",  "description": "用户身份证号码",
+          "dataType": "VARCHAR(18)",  "category": "个人信息",   "level": "core",
+          "regulation": "个人信息保护法 第28条；数据安全法 第21条", "riskScore": 96
+        },
+        {
+          "id": "f004", "name": "phone",       "description": "用户手机号",
+          "dataType": "VARCHAR(11)",  "category": "个人信息",   "level": "core",
+          "regulation": "个人信息保护法 第28条", "riskScore": 90
+        },
+        {
+          "id": "f005", "name": "email",       "description": "用户邮箱地址",
+          "dataType": "VARCHAR(100)", "category": "个人信息",   "level": "sensitive",
+          "regulation": "个人信息保护法 第4条",  "riskScore": 60
+        },
+        {
+          "id": "f006", "name": "birth_date",  "description": "用户出生日期",
+          "dataType": "DATE",         "category": "个人信息",   "level": "sensitive",
+          "regulation": "个人信息保护法 第28条", "riskScore": 65
+        },
+        {
+          "id": "f007", "name": "gender",      "description": "用户性别",
+          "dataType": "TINYINT",      "category": "个人信息",   "level": "internal",
+          "regulation": "-",            "riskScore": 20
+        },
+        {
+          "id": "f008", "name": "address",     "description": "用户常用地址",
+          "dataType": "VARCHAR(200)", "category": "个人信息",   "level": "sensitive",
+          "regulation": "个人信息保护法 第4条",  "riskScore": 68
+        },
+        {
+          "id": "f009", "name": "register_time","description": "注册时间",
+          "dataType": "DATETIME",     "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 15
+        },
+        {
+          "id": "f010", "name": "credit_score","description": "信用评分（内部计算）",
+          "dataType": "DECIMAL(5,2)", "category": "财务数据",   "level": "sensitive",
+          "regulation": "数据安全法 第27条",     "riskScore": 75
+        }
+      ]
+    },
+    {
+      "id": "t003",
+      "name": "ods_pay_raw",
+      "description": "支付流水原始数据，含支付渠道敏感信息",
+      "domain": "财务中心",
+      "level": "core",
+      "riskScore": 94,
+      "owner": "王芳",
+      "fieldCount": 22,
+      "updatedAt": "2026-05-09",
+      "fields": [
+        {
+          "id": "f101", "name": "pay_id",      "description": "支付流水号",
+          "dataType": "VARCHAR(64)", "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 12
+        },
+        {
+          "id": "f102", "name": "user_id",     "description": "用户唯一标识（关联用户表）",
+          "dataType": "VARCHAR(64)", "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 15
+        },
+        {
+          "id": "f103", "name": "bank_card_no","description": "银行卡号（明文存储）",
+          "dataType": "VARCHAR(19)", "category": "个人信息",   "level": "core",
+          "regulation": "个人信息保护法 第28条；网络安全法 第42条", "riskScore": 98
+        },
+        {
+          "id": "f104", "name": "bank_name",   "description": "开户行名称",
+          "dataType": "VARCHAR(100)","category": "财务数据",   "level": "sensitive",
+          "regulation": "数据安全法 第21条",     "riskScore": 55
+        },
+        {
+          "id": "f105", "name": "amount",      "description": "交易金额",
+          "dataType": "DECIMAL(15,2)","category": "财务数据",  "level": "core",
+          "regulation": "数据安全法 第21条",     "riskScore": 88
+        },
+        {
+          "id": "f106", "name": "pay_time",    "description": "支付时间",
+          "dataType": "DATETIME",    "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 10
+        },
+        {
+          "id": "f107", "name": "pay_channel", "description": "支付渠道（微信/支付宝/银联）",
+          "dataType": "VARCHAR(20)", "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 8
+        },
+        {
+          "id": "f108", "name": "pay_status",  "description": "支付状态",
+          "dataType": "TINYINT",     "category": "业务数据",   "level": "internal",
+          "regulation": "-",            "riskScore": 5
+        }
+      ]
+    },
+    {
+      "id": "t009",
+      "name": "ads_risk_label",
+      "description": "用户风控标签，由多维特征聚合生成",
+      "domain": "风控系统",
+      "level": "sensitive",
+      "riskScore": 76,
+      "owner": "陈勇",
+      "fieldCount": 15,
+      "updatedAt": "2026-05-08",
+      "fields": [
+        {
+          "id": "f201", "name": "user_id",         "description": "用户唯一标识",
+          "dataType": "VARCHAR(64)", "category": "业务数据", "level": "internal",
+          "regulation": "-", "riskScore": 10
+        },
+        {
+          "id": "f202", "name": "risk_level",      "description": "综合风险等级（高/中/低）",
+          "dataType": "VARCHAR(10)", "category": "个人信息", "level": "sensitive",
+          "regulation": "个人信息保护法 第24条",     "riskScore": 78
+        },
+        {
+          "id": "f203", "name": "fraud_score",     "description": "欺诈概率评分 0-1",
+          "dataType": "DECIMAL(5,4)","category": "个人信息", "level": "sensitive",
+          "regulation": "个人信息保护法 第24条",     "riskScore": 80
+        },
+        {
+          "id": "f204", "name": "overdue_times",   "description": "历史逾期次数",
+          "dataType": "INT",         "category": "财务数据", "level": "sensitive",
+          "regulation": "数据安全法 第21条",         "riskScore": 72
+        },
+        {
+          "id": "f205", "name": "black_list_flag", "description": "是否在黑名单中",
+          "dataType": "TINYINT",     "category": "个人信息", "level": "sensitive",
+          "regulation": "个人信息保护法 第24条",     "riskScore": 85
+        },
+        {
+          "id": "f206", "name": "label_update_time","description": "标签最后更新时间",
+          "dataType": "DATETIME",    "category": "业务数据", "level": "internal",
+          "regulation": "-", "riskScore": 5
+        }
+      ]
+    }
+  ]
+}
