@@ -1,0 +1,60 @@
+<template>
+  <div class="donut-wrap">
+    <div ref="chartRef" class="donut-chart" />
+    <ul class="donut-legend">
+      <li v-for="d in COMPLIANCE_STATUS_STATS" :key="d.status" class="donut-legend-item">
+        <span class="legend-swatch" :style="{ background: d.color }" />
+        <span>{{ d.status }}</span>
+        <span class="legend-count">{{ d.count }} / {{ total }}</span>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import * as echarts from 'echarts'
+import { COMPLIANCE_STATUS_STATS } from '@/data'
+import { cssVar } from '@/utils/color'
+
+const chartRef = ref<HTMLElement>()
+let chart: echarts.ECharts | null = null
+
+const total = COMPLIANCE_STATUS_STATS.reduce((s, d) => s + d.count, 0)
+
+function initChart() {
+  if (!chartRef.value) return
+  chart = echarts.init(chartRef.value)
+
+  chart.setOption({
+    tooltip: {
+      trigger: 'item',
+      formatter: (p: any) => `${p.name}: ${p.value} / ${total}`,
+    },
+    series: [{
+      type: 'pie',
+      radius: ['55%', '78%'],
+      center: ['50%', '50%'],
+      itemStyle: { borderWidth: 0 },
+      label: { show: false },
+      data: COMPLIANCE_STATUS_STATS.map(d => ({
+        name: d.status,
+        value: d.count,
+        itemStyle: { color: cssVar(d.color) },
+      })),
+    }],
+  })
+}
+
+onMounted(() => initChart())
+onUnmounted(() => chart?.dispose())
+</script>
+
+<style scoped>
+.donut-wrap { display: flex; align-items: center; gap: 1rem; }
+.donut-chart { width: 50%; height: 180px; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 0.625rem; }
+.donut-legend-item { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.875rem; }
+.legend-swatch { width: 0.625rem; height: 0.625rem; border-radius: 0.125rem; flex-shrink: 0; }
+.legend-count { font-family: var(--font-mono); color: var(--muted-foreground); }
+</style>
