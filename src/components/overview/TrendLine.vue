@@ -68,8 +68,18 @@ function initChart() {
   })
 }
 
-onMounted(() => initChart())
-onUnmounted(() => chart?.dispose())
+function resize() {
+  chart?.resize()
+}
+
+onMounted(() => {
+  initChart()
+  window.addEventListener('resize', resize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', resize)
+  chart?.dispose()
+})
 </script>
 
 <style scoped>

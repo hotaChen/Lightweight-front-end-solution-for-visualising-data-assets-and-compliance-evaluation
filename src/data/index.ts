@@ -369,3 +369,67 @@ export const COMPLIANCE_STATUS_STATS: { status: ComplianceStatus; count: number;
 
 // 高风险数据表（按风险分排序）
 export const HIGH_RISK_TABLES = [...DATA_TABLES].sort((a, b) => b.riskScore - a.riskScore)
+
+// ============ 总览页筛选联动 ============
+// 顶部筛选器状态：业务域 + 敏感等级（空数组表示"全部"）
+export interface OverviewFilter {
+  domains: BusinessDomain[]
+  levels: SensitivityLevel[]
+}
+
+export function emptyFilter(): OverviewFilter {
+  return { domains: [], levels: [] }
+}
+
+export function isFilterActive(f: OverviewFilter): boolean {
+  return f.domains.length > 0 || f.levels.length > 0
+}
+
+// 依据筛选条件过滤数据表（空维度视为不限制）
+export function filterTables(f: OverviewFilter): DataTable[] {
+  return DATA_TABLES.filter((t) => {
+    const domainOk = f.domains.length === 0 || f.domains.includes(t.domain)
+    const levelOk = f.levels.length === 0 || f.levels.includes(t.level)
+    return domainOk && levelOk
+  })
+}
+
+// 统计卡片：随筛选实时计算
+export function computeStats(tables: DataTable[]) {
+  const totalTables = tables.length
+  const totalFields = tables.reduce((s, t) => s + t.fieldCount, 0)
+  const highSensitive = tables.filter((t) => t.level === "核心" || t.level === "敏感").length
+  const highSensitiveRatio = totalTables > 0 ? Math.round((highSensitive / totalTables) * 100) : 0
+  const domains = new Set(tables.map((t) => t.domain)).size
+  return { totalTables, totalFields, highSensitiveRatio, domains }
+}
+
+// 分类分布（饼图）：随筛选计算，仅保留有数据的分类
+export function computeCategoryDistribution(tables: DataTable[]) {
+  return (Object.keys(CATEGORY_META) as DataCategory[])
+    .map((cat) => ({
+      name: cat,
+      value: tables.filter((t) => t.category === cat).length,
+      fill: CATEGORY_META[cat].color,
+    }))
+    .filter((d) => d.value > 0)
+}
+
+// 敏感等级 × 业务域（堆叠柱状图）：随筛选计算
+export function computeDomainLevelDistribution(tables: DataTable[]) {
+  return BUSINESS_DOMAINS.map((domain) => {
+    const inDomain = tables.filter((t) => t.domain === domain)
+    return {
+      domain,
+      核心: inDomain.filter((t) => t.level === "核心").length,
+      敏感: inDomain.filter((t) => t.level === "敏感").length,
+      内部: inDomain.filter((t) => t.level === "内部").length,
+      公开: inDomain.filter((t) => t.level === "公开").length,
+    }
+  }).filter((d) => d.核心 + d.敏感 + d.内部 + d.公开 > 0)
+}
+
+// 重点风险表：随筛选计算并按风险分降序
+export function computeHighRiskTables(tables: DataTable[]) {
+  return [...tables].sort((a, b) => b.riskScore - a.riskScore)
+}
