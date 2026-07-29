@@ -337,7 +337,15 @@ export const TREND_DATA = [
   { month: "6月", 新增: 27, 变更: 19 },
 ]
 
-// ============ 合规风险看板 ============
+// 近12个月趋势（折线图）：按筛选占比缩放，空筛选返回原始数据
+export function computeTrendData(tables: DataTable[]) {
+  const ratio = DATA_TABLES.length > 0 ? tables.length / DATA_TABLES.length : 1
+  return TREND_DATA.map((d) => ({
+    month: d.month,
+    新增: Math.round(d.新增 * ratio),
+    变更: Math.round(d.变更 * ratio),
+  }))
+}
 // 风险热力图：业务域 × 敏感等级
 export const RISK_HEATMAP = BUSINESS_DOMAINS.map((domain) => {
   const row: Record<string, number> = {}
@@ -401,7 +409,8 @@ export function computeStats(tables: DataTable[]) {
   const highSensitive = tables.filter((t) => t.level === "核心" || t.level === "敏感").length
   const highSensitiveRatio = totalTables > 0 ? Math.round((highSensitive / totalTables) * 100) : 0
   const domains = new Set(tables.map((t) => t.domain)).size
-  return { totalTables, totalFields, highSensitiveRatio, domains }
+  const pendingCompliance = tables.filter((t) => t.compliance === "待整改" || t.compliance === "超期整改").length
+  return { totalTables, totalFields, highSensitiveRatio, domains, pendingCompliance }
 }
 
 // 分类分布（饼图）：随筛选计算，仅保留有数据的分类

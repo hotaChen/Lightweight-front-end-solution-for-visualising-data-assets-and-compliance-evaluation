@@ -26,9 +26,9 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </template>
         </StatCard>
-        <StatCard :label="filterActive ? '当前筛选命中' : '近30天新增'" :value="filterActive ? stats.totalTables : OVERVIEW_STATS.newLast30Days" :unit="filterActive ? '张' : '项'" :accent="'var(--chart-2)'" :delta="filterActive ? '匹配当前条件' : '较上月 +12%'">
+        <StatCard label="待整改数据表" :value="stats.pendingCompliance" unit="张" :accent="'var(--chart-2)'" delta="待整改 + 超期整改">
           <template #icon>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           </template>
         </StatCard>
       </div>
@@ -49,8 +49,8 @@
 
       <div class="charts-row">
         <div class="chart-col-2">
-          <ChartCard title="数据资产变化趋势" desc="近12个月新增与变更数量">
-            <TrendLine />
+          <ChartCard title="数据资产变化趋势" desc="近12个月新增与变更数量，筛选时按范围等比估算">
+            <TrendLine :filter="filter" />
           </ChartCard>
         </div>
 
@@ -93,9 +93,7 @@ import CategoryPie from '@/components/overview/CategoryPie.vue'
 import DomainLevelBar from '@/components/overview/DomainLevelBar.vue'
 import TrendLine from '@/components/overview/TrendLine.vue'
 import {
-  OVERVIEW_STATS,
   emptyFilter,
-  isFilterActive,
   filterTables,
   computeStats,
   computeHighRiskTables,
@@ -106,7 +104,6 @@ import {
 
 const filter = ref<OverviewFilterState>(emptyFilter())
 
-const filterActive = computed(() => isFilterActive(filter.value))
 const filteredTables = computed(() => filterTables(filter.value))
 const stats = computed(() => computeStats(filteredTables.value))
 const topRisk = computed(() => computeHighRiskTables(filteredTables.value).slice(0, 4))

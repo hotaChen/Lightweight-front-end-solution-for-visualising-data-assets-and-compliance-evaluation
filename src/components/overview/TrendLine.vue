@@ -3,34 +3,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
-import { TREND_DATA } from '@/data'
+import { filterTables, computeTrendData, isFilterActive, type OverviewFilter } from '@/data'
 import { cssVar } from '@/utils/color'
+
+const props = defineProps<{ filter: OverviewFilter }>()
 
 const chartRef = ref<HTMLElement>()
 let chart: echarts.ECharts | null = null
 
-function initChart() {
-  if (!chartRef.value) return
-  chart = echarts.init(chartRef.value)
+const trendData = computed(() => computeTrendData(filterTables(props.filter)))
+const filterOn = computed(() => isFilterActive(props.filter))
 
+function render() {
+  if (!chart) return
   const mutedFg = cssVar('--muted-foreground')
   const border = cssVar('--border')
   const chart4 = cssVar('--chart-4')
   const chart2 = cssVar('--chart-2')
 
   chart.setOption({
-    tooltip: { trigger: 'axis' },
+    tooltip: {
+      trigger: 'axis',
+      formatter: filterOn.value
+        ? (params: any) => {
+            const lines = params.map((p: any) => `${p.marker}${p.seriesName}: ${p.value}`)
+            return `${params[0].name}<br>${lines.join('<br>')}<br><span style="font-size:11px;color:${mutedFg}">按筛选范围等比估算</span>`
+          }
+        : undefined,
+    },
     legend: {
       itemWidth: 8,
       itemHeight: 8,
       textStyle: { fontSize: 12, color: mutedFg },
     },
-    grid: { left: 0, right: 12, top: 8, bottom: 0 },
+    grid: { left: 0, right: 12, top: 8, bottom: 0, containLabel: true },
     xAxis: {
       type: 'category',
-      data: TREND_DATA.map(d => d.month),
+      data: trendData.value.map((d) => d.month),
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: { fontSize: 11, color: mutedFg },
@@ -47,7 +58,7 @@ function initChart() {
       {
         name: '新增',
         type: 'line',
-        data: TREND_DATA.map(d => d['新增']),
+        data: trendData.value.map((d) => d['新增']),
         smooth: true,
         lineStyle: { color: chart4, width: 2 },
         itemStyle: { color: chart4 },
@@ -57,7 +68,7 @@ function initChart() {
       {
         name: '变更',
         type: 'line',
-        data: TREND_DATA.map(d => d['变更']),
+        data: trendData.value.map((d) => d['变更']),
         smooth: true,
         lineStyle: { color: chart2, width: 2 },
         itemStyle: { color: chart2 },
@@ -65,7 +76,7 @@ function initChart() {
         symbolSize: 6,
       },
     ],
-  })
+  }, { notMerge: true })
 }
 
 function resize() {
@@ -73,13 +84,16 @@ function resize() {
 }
 
 onMounted(() => {
-  initChart()
+  if (chartRef.value) chart = echarts.init(chartRef.value)
+  render()
   window.addEventListener('resize', resize)
 })
 onUnmounted(() => {
   window.removeEventListener('resize', resize)
   chart?.dispose()
 })
+
+watch(trendData, render)
 </script>
 
 <style scoped>
