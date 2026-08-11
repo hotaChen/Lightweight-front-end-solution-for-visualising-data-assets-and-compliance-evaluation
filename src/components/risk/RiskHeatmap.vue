@@ -5,15 +5,19 @@
       <div v-for="l in LEVELS" :key="l" class="heatmap-header">{{ l }}</div>
       <template v-for="domain in BUSINESS_DOMAINS" :key="domain">
         <div class="heatmap-label">{{ domain }}</div>
-        <div
+        <button
           v-for="l in LEVELS"
           :key="l"
+          type="button"
           class="heatmap-cell"
+          :class="{ 'heatmap-cell--empty': getValue(domain, l) === 0 }"
           :style="cellStyle(getValue(domain, l))"
-          :title="`${domain} · ${l}：风险指数 ${getValue(domain, l)}`"
+          :title="`${domain} · ${l}：${getValue(domain, l)} 张资产表`"
+          :disabled="getValue(domain, l) === 0"
+          @click="emit('select', domain, l)"
         >
           {{ getValue(domain, l) || '' }}
-        </div>
+        </button>
       </template>
     </div>
     <div class="heatmap-legend">
@@ -25,7 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { RISK_HEATMAP, BUSINESS_DOMAINS } from '@/data'
+import { RISK_HEATMAP, BUSINESS_DOMAINS, type BusinessDomain, type SensitivityLevel } from '@/data'
+
+const emit = defineEmits<{ select: [domain: BusinessDomain, level: SensitivityLevel] }>()
 
 const LEVELS = ['核心', '敏感', '内部', '公开'] as const
 
@@ -82,7 +88,13 @@ function cellStyle(value: number) {
   font-size: 0.875rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  border: 1px solid transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
 }
+.heatmap-cell:not(:disabled):hover { border-color: var(--foreground); transform: translateY(-1px); }
+.heatmap-cell--empty { cursor: default; }
 .heatmap-legend {
   display: flex;
   align-items: center;
@@ -96,5 +108,16 @@ function cellStyle(value: number) {
   width: 0.875rem;
   height: 0.875rem;
   border-radius: 0.125rem;
+}
+@media (max-width: 640px) {
+  .heatmap-grid {
+    grid-template-columns: 4.5rem repeat(4, minmax(2.75rem, 1fr));
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .heatmap-label { padding-right: 0.25rem; font-size: 0.6875rem; }
+  .heatmap-header { font-size: 0.6875rem; }
+  .heatmap-cell { height: 2.75rem; }
+  .heatmap-legend { gap: 0.35rem; }
 }
 </style>

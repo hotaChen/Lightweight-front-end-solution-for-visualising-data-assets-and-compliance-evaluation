@@ -1,5 +1,11 @@
 <template>
-  <div class="stat-card">
+  <component
+    :is="interactive ? 'button' : 'div'"
+    class="stat-card"
+    :class="{ 'stat-card--interactive': interactive }"
+    :type="interactive ? 'button' : undefined"
+    @click="interactive && emit('click')"
+  >
     <div class="stat-body">
       <div class="stat-icon" :style="{ background: `color-mix(in oklab, ${accent} 14%, transparent)`, color: accent }">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -19,7 +25,7 @@
         <p class="stat-desc">{{ desc }}</p>
       </div>
     </div>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +35,10 @@ defineProps<{
   label: string
   value: number
   desc: string
+  interactive?: boolean
 }>()
+
+const emit = defineEmits<{ click: [] }>()
 </script>
 
 <style scoped>
@@ -39,6 +48,9 @@ defineProps<{
   background: var(--card);
   color: var(--card-foreground);
 }
+.stat-card--interactive { width: 100%; text-align: left; cursor: pointer; }
+.stat-card--interactive:hover { border-color: var(--primary); background: color-mix(in oklab, var(--primary) 4%, var(--card)); }
+.stat-card--interactive:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .stat-body {
   display: flex;
   align-items: center;

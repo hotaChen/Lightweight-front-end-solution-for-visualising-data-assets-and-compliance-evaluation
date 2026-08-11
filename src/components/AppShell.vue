@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <aside class="app-sidebar">
+    <aside :class="['app-sidebar', { 'app-sidebar--open': sidebarOpen }]">
       <div class="sidebar-header">
         <div class="sidebar-logo">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
@@ -33,10 +33,11 @@
         </div>
       </div>
     </aside>
+    <button v-if="sidebarOpen" class="sidebar-overlay" type="button" aria-label="关闭导航" @click="sidebarOpen = false" />
 
     <div class="app-main">
       <header class="app-header">
-        <button class="header-trigger" @click="sidebarOpen = !sidebarOpen">
+        <button class="header-trigger" type="button" aria-label="切换导航" @click="sidebarOpen = !sidebarOpen">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
         </button>
         <span class="header-sep" />
@@ -60,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref, h, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useClock } from '@/utils/clock'
 
@@ -72,19 +73,25 @@ export interface Breadcrumb {
 defineProps<{ breadcrumbs: Breadcrumb[] }>()
 
 const route = useRoute()
-const sidebarOpen = ref(true)
+const sidebarOpen = ref(window.innerWidth >= 768)
 const { now } = useClock()
+
+function handleResize() {
+  if (window.innerWidth >= 768 && !sidebarOpen.value) sidebarOpen.value = true
+}
+
+onMounted(() => window.addEventListener('resize', handleResize))
+onUnmounted(() => window.removeEventListener('resize', handleResize))
 
 const navItems = [
   { title: '导航菜单', href: '/design-system', code: 'F0', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>' }) },
-  { title: '数据资产总览', href: '/', code: 'F1', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>' }) },
-  { title: '合规风险看板', href: '/risk', code: 'F3', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' }) },
+  { title: '数据总览', href: '/', code: 'F1', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>' }) },
   { title: '数据血缘关系图', href: '/lineage', code: 'F2', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>' }) },
-  { title: '数据资产目录', href: '/catalog', code: 'F5', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>' }) },
+  { title: '数据资产', href: '/catalog', code: 'F4', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>' }) },
 ]
 
 function isActive(href: string) {
-  if (href === '/') return route.path === '/'
+  if (href === '/') return route.path === '/' || route.path === '/risk'
   return route.path.startsWith(href)
 }
 </script>
@@ -107,6 +114,8 @@ function isActive(href: string) {
   display: flex;
   flex-direction: column;
 }
+.app-sidebar:not(.app-sidebar--open) { display: none; }
+.sidebar-overlay { display: none; }
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -310,5 +319,30 @@ function isActive(href: string) {
   .app-content {
     padding: 1.5rem;
   }
+}
+@media (max-width: 767px) {
+  .app-sidebar {
+    display: flex !important;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 1.5rem color-mix(in oklab, var(--foreground) 20%, transparent);
+  }
+  .app-sidebar--open { transform: translateX(0); }
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: color-mix(in oklab, var(--foreground) 35%, transparent);
+  }
+  .app-header { padding: 0 0.75rem; }
+  .header-clock { display: none; }
+  .header-breadcrumb { min-width: 0; overflow: hidden; white-space: nowrap; }
+  .breadcrumb-link, .breadcrumb-current { overflow: hidden; text-overflow: ellipsis; }
+  .app-content { padding: 1rem; }
 }
 </style>

@@ -2,6 +2,10 @@
   <div class="field-card">
     <!-- 等级筛选 chips -->
     <div class="chip-bar">
+      <label class="field-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+        <input v-model="query" type="search" placeholder="搜索字段名或描述" />
+      </label>
       <span class="chip-label">按等级筛选：</span>
       <button :class="['chip', { 'chip--active': active === 'all' }]" @click="active = 'all'">
         全部 <span class="chip-count">{{ fields.length }}</span>
@@ -18,8 +22,8 @@
       </button>
     </div>
 
-    <!-- Table -->
-    <table class="field-table">
+    <div class="table-wrap">
+      <table class="field-table">
       <thead>
         <tr>
           <th class="pl-4">字段名</th>
@@ -31,9 +35,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="f in rows" :key="f.name" :class="{ 'row-high': f.level === '核心' || f.level === '敏感' }">
+        <tr
+          v-for="f in rows"
+          :key="f.name"
+          :class="{
+            'row-core': f.level === '核心',
+            'row-sensitive': f.level === '敏感',
+            'row-selected': selectedName === f.name,
+          }"
+        >
           <td class="pl-4">
-            <span :class="['field-name', { 'field-name--high': f.level === '核心' || f.level === '敏感' }]">{{ f.name }}</span>
+            <button
+              type="button"
+              :class="['field-name', { 'field-name--high': f.level === '核心' || f.level === '敏感' }]"
+              :aria-current="selectedName === f.name ? 'true' : undefined"
+              @click="$emit('select', f)"
+            >
+              {{ f.name }}
+            </button>
           </td>
           <td class="text-muted">{{ f.desc }}</td>
           <td class="font-mono text-muted" style="font-size: 0.75rem;">{{ f.type }}</td>
@@ -41,8 +60,10 @@
           <td><Badges badge-type="level" :level="f.level" /></td>
           <td class="text-muted">{{ f.regulation }}</td>
         </tr>
+        <tr v-if="rows.length === 0"><td colspan="6" class="empty-cell">没有符合条件的字段</td></tr>
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -51,10 +72,12 @@ import { ref, computed } from 'vue'
 import Badges from '@/components/Badges.vue'
 import { SENSITIVITY_META, type FieldInfo, type SensitivityLevel } from '@/data'
 
-const props = defineProps<{ fields: FieldInfo[] }>()
+const props = defineProps<{ fields: FieldInfo[]; selectedName?: string }>()
+defineEmits<{ select: [field: FieldInfo] }>()
 
 const LEVELS: SensitivityLevel[] = ['核心', '敏感', '内部', '公开']
 const active = ref<SensitivityLevel | 'all'>('all')
+const query = ref('')
 
 const counts = computed(() => {
   const c: Record<string, number> = {}
@@ -62,11 +85,19 @@ const counts = computed(() => {
   return c
 })
 
-const rows = computed(() => active.value === 'all' ? props.fields : props.fields.filter(f => f.level === active.value))
+const rows = computed(() => {
+  const keyword = query.value.trim().toLowerCase()
+  return props.fields.filter(field => {
+    const matchesLevel = active.value === 'all' || field.level === active.value
+    const matchesQuery = !keyword || field.name.toLowerCase().includes(keyword) || field.desc.toLowerCase().includes(keyword)
+    return matchesLevel && matchesQuery
+  })
+})
 </script>
 
 <style scoped>
 .field-card {
+  min-width: 0;
   border-radius: 0.625rem;
   border: 1px solid var(--border);
   overflow: hidden;
@@ -83,6 +114,11 @@ const rows = computed(() => active.value === 'all' ? props.fields : props.fields
   font-size: 0.75rem;
   color: var(--muted-foreground);
 }
+.table-wrap { overflow-x: auto; }
+.field-search { position: relative; flex: 1 1 15rem; min-width: 12rem; }
+.field-search svg { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--muted-foreground); pointer-events: none; }
+.field-search input { width: 100%; height: 2rem; padding: 0 0.65rem 0 1.9rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--background); font-size: 0.75rem; outline: none; }
+.field-search input:focus { border-color: var(--ring); box-shadow: 0 0 0 2px color-mix(in oklab, var(--ring) 25%, transparent); }
 .chip {
   display: inline-flex;
   align-items: center;
@@ -102,6 +138,7 @@ const rows = computed(() => active.value === 'all' ? props.fields : props.fields
 
 .field-table {
   width: 100%;
+  min-width: 720px;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
@@ -130,6 +167,11 @@ const rows = computed(() => active.value === 'all' ? props.fields : props.fields
 .text-muted { color: var(--muted-foreground); }
 .font-mono { font-family: var(--font-mono); }
 .field-name { font-family: var(--font-mono); font-size: 0.875rem; }
+.field-name:hover { color: var(--primary); text-decoration: underline; }
 .field-name--high { font-weight: 600; }
-.row-high { background: color-mix(in oklab, var(--chart-1) 4%, transparent); }
+.row-core { background: color-mix(in oklab, var(--chart-1) 9%, transparent); }
+.row-sensitive { background: color-mix(in oklab, var(--chart-2) 8%, transparent); }
+.row-selected { box-shadow: inset 3px 0 0 var(--primary); }
+.row-selected td { background: color-mix(in oklab, var(--primary) 8%, transparent); }
+.empty-cell { height: 6rem; text-align: center; color: var(--muted-foreground); }
 </style>

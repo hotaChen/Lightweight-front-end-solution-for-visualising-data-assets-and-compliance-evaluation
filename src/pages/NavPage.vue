@@ -37,19 +37,11 @@ import AppShell from '@/components/AppShell.vue'
 const pages = [
   {
     code: 'F1',
-    name: '数据资产总览',
+    name: '数据总览',
     href: '/',
     level: 'P0',
-    desc: '全局指标、分类分布、敏感等级、变更趋势',
+    desc: '资产概览与风险概览双视图，集中观察平台态势',
     iconPath: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
-  },
-  {
-    code: 'F3',
-    name: '合规风险看板',
-    href: '/risk',
-    level: 'P0',
-    desc: '综合评分、风险热力图、合规雷达、整改清单',
-    iconPath: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
   },
   {
     code: 'F2',
@@ -60,11 +52,11 @@ const pages = [
     iconPath: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>',
   },
   {
-    code: 'F5',
-    name: '数据资产目录',
+    code: 'F4',
+    name: '数据资产',
     href: '/catalog',
     level: 'P1',
-    desc: '多维筛选检索，下钻字段详情',
+    desc: '资产目录与风险处置双视图，下钻字段级详情',
     iconPath: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>',
   },
 ]
