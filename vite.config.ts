@@ -32,9 +32,12 @@ function mockPlatformApi(): Plugin {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const enableMockApi = env.VITE_ENABLE_MOCK_API !== 'false'
+  const enableMockApi = env.VITE_ENABLE_MOCK_API === 'true'
   return {
     plugins: [vue(), ...(enableMockApi ? [mockPlatformApi()] : [])],
+    server: {
+      proxy: enableMockApi ? undefined : { '/api': 'http://localhost:8787' },
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
