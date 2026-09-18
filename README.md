@@ -1,6 +1,6 @@
 # Lightweight-front-end-solution-for-visualising-data-assets-and-compliance-evaluation 数据资产分类分级与合规风险管理平台
 
-企业数据资产分类分级、血缘追踪与合规风险管理的可视化原型系统。纯前端实现，所有数据为静态模拟数据，无需后端服务。
+企业数据资产分类分级、血缘追踪与合规风险管理的可视化原型系统。前端与数据解耦，统一从数据服务读取（内置 Mock / 本地 SQLite 双模式），可无缝替换为真实后端。
 ---
 
 ## 技术栈
@@ -11,7 +11,7 @@
 | 构建 | Vite 8 | 开发服务器与生产构建 |
 | 语言 | TypeScript ~5.7 | 静态类型检查 |
 | 路由 | Vue Router 4 | 客户端 SPA 路由，懒加载 |
-| 图表 | ECharts 5 | 饼图、柱状图、折线图、雷达图、环形图 |
+| 图表 | ECharts 6 | 饼图、柱状图、折线图、雷达图、环形图 |
 | 关系图 | AntV G6 5 | 数据血缘 DAG 图 (Dagre 布局) |
 | CSS | 纯 CSS | CSS 自定义属性 + 原子工具类，无第三方框架 |
 
@@ -21,7 +21,7 @@
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
+npm run dev:mock        # http://localhost:5173
 ```
 
 ```bash
@@ -31,14 +31,24 @@ npm run preview    # 预览构建产物
 
 ---
 
+### 真实数据模式（本地 SQLite）
+
+```bash
+npm run db:init    # 首次：初始化数据库并从 mock/platform.json 导入
+npm run api        # 终端 1：启动数据 API（http://localhost:8787）
+npm run dev        # 终端 2：启动前端（/api 代理到 8787）
+```
+
+> `npm run dev` 需先启动数据 API，否则页面停在「数据加载失败」；快速演示请用 `npm run dev:mock`。
+
 ## 项目结构
 
 ```
 src/
 ├── main.ts                         # 应用入口
 ├── App.vue                         # 根组件
-├── router/index.ts                 # 6 条路由 (懒加载)
-├── data/index.ts                   # 类型定义 + 模拟数据 + 聚合计算
+├── router/index.ts                 # 8 条路由 (懒加载) + 路由守卫
+├── data/index.ts                   # 类型 + 数据加载 + 聚合计算
 ├── styles/
 │   ├── variables.css               # CSS 自定义属性 (亮/暗主题)
 │   ├── reset.css                   # 浏览器重置
@@ -71,7 +81,17 @@ src/
 | `/lineage` | 数据血缘关系图 | P1 | DAG 图，节点点击查看上下游 |
 | `/catalog` | 数据资产目录 | P1 | 多维筛选检索，下钻字段详情 |
 | `/catalog/:id` | 字段详情 | — | 表元信息、简化血缘、字段清单 |
-| `/design-system` | 导航入口 | — | 功能模块导航页 |
+| `/design-system` | 导航入口 | — | 功能模块导航 + 系统说明 |
+| `/403` | 无权访问 | — | 权限不足跳转页 |
+| `/:pathMatch(.*)*` | 页面不存在 | — | 404 兜底，未知路径自动进入 |
+
+### 路由守卫
+
+`router.beforeEach` 统一处理：
+
+- **参数校验**：`/catalog/:id` 数据就绪后校验 ID，无效重定向 `/catalog`
+- **权限门禁**：路由 `meta.roles` 声明可访问角色（`VIEWER`/`ADMIN`），不匹配重定向 `/403`
+- **文档标题**：依据 `meta.title` 更新 `document.title`
 
 ### 跨页面导航
 
@@ -119,8 +139,9 @@ type ComplianceStatus = "已合规" | "待整改" | "超期整改"         // 3 
 
 ### 模拟数据
 
-- **10 张数据表**，覆盖 6 个业务域，总计 178+ 字段
-- 预计算聚合数据: `OVERVIEW_STATS`, `CATEGORY_DISTRIBUTION`, `DOMAIN_LEVEL_DISTRIBUTION`, `TREND_DATA`, `RISK_HEATMAP`, `COMPLIANCE_RADAR`, `COMPLIANCE_STATUS_STATS`, `HIGH_RISK_TABLES`
+- **10 张数据表**，覆盖 6 个业务域，总计 178+ 字段，原始数据位于 `mock/platform.json`
+- 数据统一由 `GET /api/platform` 返回，`src/data/index.ts` 拉取后做预计算聚合
+- 聚合数据: `OVERVIEW_STATS`, `CATEGORY_DISTRIBUTION`, `DOMAIN_LEVEL_DISTRIBUTION`, `TREND_DATA`, `RISK_HEATMAP`, `COMPLIANCE_RADAR`, `COMPLIANCE_STATUS_STATS`, `HIGH_RISK_TABLES`
 
 ---
 
@@ -322,18 +343,27 @@ graph.on('node:click', (evt) => {
 
 ---
 
-## Mock 数据入口说明
+## 数据层说明
 
 ### 数据文件
 
-所有模拟数据位于 **`src/data/index.ts`**，无需后端，直接导入使用。
+页面不内置业务数据，统一从数据服务读取：
+
+```
+GET {VITE_API_BASE_URL}/platform → src/api/platform.ts 校验解析 → src/data/index.ts 聚合 → 页面
+```
+
+- 接口契约见 `API_CONTRACT.md`；运行与部署见 `docs/06_部署说明.md`
+- 数据源二选一：`mock/platform.json`（Mock 模式，`npm run dev:mock`）或 `server/` 的 SQLite（真实模式）
+- 应用入口 `App.vue` 提供加载中 / 加载失败 / 重试三态
 
 ### 核心导出
 
 ```typescript
-// 原始数据
-export const DATA_TABLES: DataTable[]       // 10 张数据表，含完整字段
+// 原始数据（由 loadPlatformData() 异步填充）
+export const DATA_TABLES = reactive<DataTable[]>([])       // 10 张数据表，含完整字段
 export function getTableById(id: string)     // 按 ID 查找单张表
+export function loadPlatformData(force?: boolean)     // 加载平台数据
 
 // 聚合数据 (预计算，各页面直接使用)
 export const OVERVIEW_STATS                 // 全局统计指标
@@ -362,7 +392,7 @@ export const BUSINESS_DOMAINS               // 6 个业务域列表
 
 ### 修改/新增数据表
 
-直接编辑 `DATA_TABLES` 数组，每个元素遵循 `DataTable` 接口：
+编辑 `mock/platform.json` 的 `tables` 数组，每个元素遵循 `DataTable` 接口（SQLite 模式需重新 `npm run db:init` 生效）：
 
 ```typescript
 {
@@ -395,15 +425,12 @@ export const BUSINESS_DOMAINS               // 6 个业务域列表
 
 ### 修改聚合数据
 
-修改 `DATA_TABLES` 后，以下聚合常量会**自动重新计算**（模块顶层代码，每次热更新重新执行）：
-- `OVERVIEW_STATS` — 从 `DATA_TABLES` 动态计算
-- `CATEGORY_DISTRIBUTION` / `DOMAIN_LEVEL_DISTRIBUTION` — 动态计算
-- `RISK_HEATMAP` — 动态计算
-- `COMPLIANCE_STATUS_STATS` / `HIGH_RISK_TABLES` — 动态计算
+`loadPlatformData()` 加载完成后，`hydrateStore()` 依据 `tables` 自动重算以下聚合数据，无需手工维护：
+- `OVERVIEW_STATS`、`CATEGORY_DISTRIBUTION`、`DOMAIN_LEVEL_DISTRIBUTION`、`RISK_HEATMAP`、`COMPLIANCE_STATUS_STATS`、`HIGH_RISK_TABLES`
 
-手动维护的常量：
-- `TREND_DATA` — 需手动更新月份和数值
-- `COMPLIANCE_RADAR` — 需手动更新各维度评分
+由接口直接返回的常量（在 `mock/platform.json` 或 SQLite 中维护）：
+- `TREND_DATA`（`overview.trend`）
+- `COMPLIANCE_RADAR`（`risk.radar`）
 
 ### 颜色约定
 
