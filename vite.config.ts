@@ -34,6 +34,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const enableMockApi = env.VITE_ENABLE_MOCK_API === 'true'
   return {
+    base: env.VITE_BASE || '/',
     plugins: [vue(), ...(enableMockApi ? [mockPlatformApi()] : [])],
     server: {
       proxy: enableMockApi ? undefined : { '/api': 'http://localhost:8787' },

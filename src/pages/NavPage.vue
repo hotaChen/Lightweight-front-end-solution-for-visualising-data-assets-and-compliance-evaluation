@@ -6,6 +6,18 @@
         <p class="page-desc">选择下方任一模块进入对应原型页面。</p>
       </div>
 
+      <section class="about-section">
+        <h2 class="about-title">系统说明</h2>
+        <p class="about-desc">
+          本平台面向企业数据资产的分类分级与合规风险管理，覆盖数据资产总览、数据血缘追踪、合规风险看板与资产目录下钻四大模块。
+        </p>
+        <dl class="about-grid">
+          <div><dt>平台定位</dt><dd>企业数据资产分类分级、血缘追踪与合规风险管理的可视化原型。</dd></div>
+          <div><dt>数据来源</dt><dd>演示数据来自本地 SQLite / Mock 接口（GET /api/platform），可在部署配置中切换。</dd></div>
+          <div><dt>技术栈</dt><dd>Vue 3 + TypeScript + Vite，ECharts 图表，AntV G6 血缘图。</dd></div>
+        </dl>
+      </section>
+
       <div class="nav-grid">
         <router-link
           v-for="p in pages"
@@ -52,6 +64,14 @@ const pages = [
     iconPath: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>',
   },
   {
+    code: 'F3',
+    name: '风险看板',
+    href: '/risk',
+    level: 'P0',
+    desc: '综合评分、风险热力图、合规雷达与整改清单，集中呈现合规风险态势',
+    iconPath: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  },
+  {
     code: 'F4',
     name: '数据资产',
     href: '/catalog',
@@ -83,6 +103,23 @@ const pages = [
   font-size: 0.875rem;
   color: var(--muted-foreground);
 }
+
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--card);
+}
+.about-title { font-size: 1rem; font-weight: 600; }
+.about-desc { font-size: 0.875rem; color: var(--muted-foreground); line-height: 1.625; }
+.about-grid { display: grid; gap: 0.75rem; margin: 0; }
+@media (min-width: 640px) { .about-grid { grid-template-columns: 1fr 1fr 1fr; } }
+.about-grid div { display: flex; flex-direction: column; gap: 0.2rem; }
+.about-grid dt { font-size: 0.75rem; font-weight: 500; color: var(--foreground); }
+.about-grid dd { margin: 0; font-size: 0.8125rem; color: var(--muted-foreground); line-height: 1.55; }
 
 .nav-grid {
   display: grid;
