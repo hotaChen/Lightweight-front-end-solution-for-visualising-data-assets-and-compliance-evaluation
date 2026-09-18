@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "api": "node server/index.mjs",
     "db:init": "node server/init.mjs",
-    "dev:mock": "VITE_ENABLE_MOCK_API=true vite"
+    "dev:mock": "vite --mode mock"
   },
   "dependencies": {
     "@antv/g6": "^5.1.1",
