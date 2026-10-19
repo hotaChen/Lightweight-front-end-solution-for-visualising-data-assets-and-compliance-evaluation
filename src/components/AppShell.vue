@@ -89,6 +89,7 @@ const navItems = [
   { title: '数据血缘关系图', href: '/lineage', code: 'F2', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/>' }) },
   { title: '风险看板', href: '/risk', code: 'F3', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' }) },
   { title: '数据资产', href: '/catalog', code: 'F4', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>' }) },
+  { title: 'RAG 智能分类', href: '/rag', code: 'F5', icon: () => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', innerHTML: '<path d="M12 3a5 5 0 0 0-5 5v1a4 4 0 0 0-2 3.46V15a4 4 0 0 0 4 4h1l2 2 2-2h1a4 4 0 0 0 4-4v-2.54A4 4 0 0 0 17 9V8a5 5 0 0 0-5-5Z"/><path d="M9 12h.01M15 12h.01M9.5 15.5c1.5 1 3.5 1 5 0"/>' }) },
 ]
 
 function isActive(href: string) {

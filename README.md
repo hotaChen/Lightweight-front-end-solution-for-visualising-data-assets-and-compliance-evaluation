@@ -446,3 +446,23 @@ export const SENSITIVITY_META = {
 
 - **DOM 渲染**（HTML/CSS）：直接使用 `var(--xxx)`，浏览器自动解析
 - **Canvas 渲染**（ECharts/G6）：通过 `cssVar()` 工具函数转换为实际色值
+
+---
+
+## RAG 智能分类页面
+
+访问 `/rag` 可使用单字段分类、数据库批量分类、任务结果筛选及检索依据查看功能。
+
+开发环境默认将 `/rag-api/*` 代理至 `http://127.0.0.1:8000/api/*`。如后端地址不同，可在本地环境变量中配置：
+
+```bash
+VITE_RAG_PROXY_TARGET=http://127.0.0.1:8000
+```
+
+若生产环境通过其他地址访问 RAG API，可设置完整前缀：
+
+```bash
+VITE_RAG_API_BASE_URL=/rag-api
+```
+
+现有数据资产接口仍使用 `/api`，两套代理互不影响。

@@ -37,7 +37,14 @@ export default defineConfig(({ mode }) => {
     base: env.VITE_BASE || '/',
     plugins: [vue(), ...(enableMockApi ? [mockPlatformApi()] : [])],
     server: {
-      proxy: enableMockApi ? undefined : { '/api': 'http://localhost:8787' },
+      proxy: {
+        ...(!enableMockApi ? { '/api': 'http://localhost:8787' } : {}),
+        '/rag-api': {
+          target: env.VITE_RAG_PROXY_TARGET || 'http://127.0.0.1:8000',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/rag-api/, '/api'),
+        },
+      },
     },
     resolve: {
       alias: {

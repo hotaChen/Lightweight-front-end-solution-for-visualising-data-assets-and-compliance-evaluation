@@ -42,6 +42,12 @@ const router = createRouter({
       meta: { title: '导航菜单' },
     },
     {
+      path: '/rag',
+      name: 'rag',
+      component: () => import('@/pages/RagPage.vue'),
+      meta: { title: 'RAG 智能分类', requiresPlatformData: false },
+    },
+    {
       path: '/403',
       name: 'forbidden',
       component: () => import('@/pages/Forbidden.vue'),
